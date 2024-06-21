@@ -55,32 +55,74 @@
         </div>
         <div class="analytics">
             <div class="analytics-card">
+                <p class="css-1igcytj" > 🚀 </p>
                 <h3>Total Visits</h3>
                 <p class="css-1igcytj" id="total-visits" >0 </p>
                 
             </div>
             <div class="analytics-card">
+                <p class="css-1igcytj" > ®️ </p>
+
                 <h3>Registered
                 </h3>
                 <p class="css-1igcytj" id="registered">0</p>
             </div>
             <div class="analytics-card">
+                <p class="css-1igcytj" >   🚶‍♂️</p>
                 <h3>Self Arrivals
                 </h3>
                 <p class="css-1igcytj"id="self-arrivals">0</p>
             </div>
             <div class="analytics-card">
+                <p class="css-1igcytj" >🌙</p>
                 <h3>Red Crescent Arrivals
                 </h3>
                 <p class="css-1igcytj" id="red-crescent-arrivals">0</p>
             </div>
             <div class="analytics-card">
+                <p class="css-1igcytj" >⌛</p>
+
+
                 <h3>Waiting Status
                 </h3>
-                <p class="css-1igcytj" id="waiting-status">50.8K</p>
+                <p class="css-1igcytj" id="waiting-status">0</p>
             </div>
         </div>
+        <div class="analytics">
+            <div class="analytics-card">
+                <p class="css-1igcytj" > 💙 </p>
+                <h3>CTAS 1</h3>
+                <p class="css-1igcytj" id="ctas1" >0 </p>
+                
+            </div>
+            <div class="analytics-card">
+                <p class="css-1igcytj" > ❤️ </p>
 
+                <h3>CTAS 2
+                </h3>
+                <p class="css-1igcytj" id="ctas2">0</p>
+            </div>
+            <div class="analytics-card">
+                <p class="css-1igcytj" >   💛</p>
+                <h3>CTAS 3
+                </h3>
+                <p class="css-1igcytj"id="ctas3">0</p>
+            </div>
+            <div class="analytics-card">
+                <p class="css-1igcytj" >💚</p>
+                <h3>CTAS 4
+                </h3>
+                <p class="css-1igcytj" id="ctas4">0</p>
+            </div>
+            <div class="analytics-card">
+                <p class="css-1igcytj" >🤍</p>
+
+
+                <h3>CTAS 5
+                </h3>
+                <p class="css-1igcytj" id="ctas5">0</p>
+            </div>
+        </div>
         <div class="chart">
             <h3>Floor Manager Dashboard</h3>
           
@@ -126,7 +168,8 @@
                 <h3 class="direct">🔔 Rapid Response Team 🔔</h3>
            
                 <div class="chart-legend">
-                    <button type="button" class="css-z645tr" onclick="setCriticalAlert()">Critical Alert</button>
+                    <button type="button" class="css-z645tr" onclick="setCriticalAlert(); onButtonPress();">Critical Alert</button><br>
+                    <button type="button" class="css-z645tr1" onclick="setCriticalAlert()">CPR</button>
 
                     <span class="organic">Organic</span>
                     <span class="social">Social</span>
@@ -135,7 +178,7 @@
                 </div>
             </div>
             <div class="chart">
-                <h3 class="direct">Respiratory Illness Detection Panel</h3>
+                <h3 class="direct">Respiratory Illness Detection Panel 🫁</h3>
                 <div class="chart-legend">
        
                      <!-- Respiratory Illness Detection Panel -->
@@ -378,7 +421,24 @@
                 console.error("Error saving respiratory data: ", error);
             });
         }
-    
+        function countCTASLevels() {
+    db.collection("patients").get().then((querySnapshot) => {
+        let ctasCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+        querySnapshot.forEach((doc) => {
+            const patient = doc.data();
+            if (patient.ctas >= 1 && patient.ctas <= 5) {
+                ctasCounts[patient.ctas]++;
+            }
+        });
+
+        document.getElementById('ctas1').textContent = ctasCounts[1];
+        document.getElementById('ctas2').textContent = ctasCounts[2];
+        document.getElementById('ctas3').textContent = ctasCounts[3];
+        document.getElementById('ctas4').textContent = ctasCounts[4];
+        document.getElementById('ctas5').textContent = ctasCounts[5];
+    });
+}
     function updateDashboard() {
       db.collection("patients").get().then((querySnapshot) => {
         let totalVisits = 0;
@@ -409,6 +469,8 @@
         document.getElementById('red-crescent-arrivals').textContent = redCrescentArrivals;
         document.getElementById('waiting-status').textContent = waitingStatus;
         document.getElementById('registered').textContent = registeredStatus;
+        countCTASLevels(); // Add this call to count and update CTAS levels
+
       });
     }
     
@@ -602,7 +664,39 @@
         }
       });
     
+
+      function checkForUnstablePatients() {
+    db.collection("patients").get().then((querySnapshot) => {
+        let foundUnstable = false;
+
+        querySnapshot.forEach((doc) => {
+            const patient = doc.data();
+            if (patient.chiefComplaint === 'Unstable') {
+                foundUnstable = true;
+            }
+        });
+
+        if (foundUnstable) {
+            playAlertSound();
+        }
+    });
+}
+
+function playAlertSound() {
+    const alertSound = document.getElementById('alert-sound');
+    alertSound.play();
+}
+
+// Add this function to your button's onclick event
+function onButtonPress() {
+    checkForUnstablePatients();
+}
+
+
       </script>
+      <!-- Add this inside the <body> tag -->
+<audio id="alert-sound" src="D:\hospital-management\1.mp3"></audio>
+
 </body>
 
 </html>
