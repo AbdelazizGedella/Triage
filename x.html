@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <link rel="stylesheet" href="x.css">
+          <!-- Bootstrap CSS -->
+          <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+      
+          <!-- Firebase App (the core Firebase SDK) -->
+          <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+          <!-- Add Firebase products that you want to use -->
+          <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+          <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+          <!-- Include Moment.js -->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+          <!-- Include Moment Timezone -->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+      
+    </head>
+
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>CMH | CONTROL</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Users</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Integrations</a></li>
+            <li><a href="#">Authentication</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <img src="profile.jpg" alt="John Carter">
+            <p>John Carter</p>
+            <a href="#">Account Settings</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="search-bar">
+                <input type="text" placeholder="Search for...">
+            </div>
+            <div class="user-info">
+                <span class="flag-icon">🇬🇧</span>
+                <span class="notifications-icon">🔔</span>
+                <img src="profile.jpg" alt="Mr. John" class="user-avatar">
+                <span>Mr. John</span>
+            </div>
+        </div>
+        <div class="analytics">
+            <div class="analytics-card">
+                <h3>Total Visits</h3>
+                <p class="css-1igcytj" id="total-visits" >0 </p>
+                
+            </div>
+            <div class="analytics-card">
+                <h3>Registered
+                </h3>
+                <p class="css-1igcytj" id="registered">0</p>
+            </div>
+            <div class="analytics-card">
+                <h3>Self Arrivals
+                </h3>
+                <p class="css-1igcytj"id="self-arrivals">0</p>
+            </div>
+            <div class="analytics-card">
+                <h3>Red Crescent Arrivals
+                </h3>
+                <p class="css-1igcytj" id="red-crescent-arrivals">0</p>
+            </div>
+            <div class="analytics-card">
+                <h3>Waiting Status
+                </h3>
+                <p class="css-1igcytj" id="waiting-status">50.8K</p>
+            </div>
+        </div>
+
+        <div class="chart">
+            <h3>Floor Manager Dashboard</h3>
+          
+            <div id="floor-manager" class="table-class" >
+               
+                <div >
+                  <table >
+                    <thead>
+                      <tr>
+                        <th>Serial Number</th>
+                        <th>Name</th>
+                        <th>Chief Complaint</th>
+                        <th>Status</th>
+                        <th>Arrival Time</th>
+                        <th>Assigned Nurse</th>
+                        <th>Nurse Assigned At</th>
+                        <th>Assigned Physician</th>
+                        <th>Physician Assigned At</th>
+                        <th>CTAS</th>
+                        <th>Visual Triage Score</th>
+                      </tr>
+                    </thead>
+                    <tbody id="overall-queue">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+        </div>
+<br>
+<div class="chart">
+    <h3>Triage Nurse Panel</h3>
+   <!-- Triage Nurse Interface -->
+   <div id="triage-panel">
+  
+    <div id="patient-queue" >
+      <div class="row"></div>
+    </div>
+  </div>
+</div>
+<br>
+        <div class="charts">
+            <div class="chart">
+                <h3 class="direct">🔔 Rapid Response Team 🔔</h3>
+           
+                <div class="chart-legend">
+                    <button type="button" class="css-z645tr" onclick="setCriticalAlert()">Critical Alert</button>
+
+                    <span class="organic">Organic</span>
+                    <span class="social">Social</span>
+                    <span class="direct">Direct</span>
+                    
+                </div>
+            </div>
+            <div class="chart">
+                <h3 class="direct">Respiratory Illness Detection Panel</h3>
+                <div class="chart-legend">
+       
+                     <!-- Respiratory Illness Detection Panel -->
+    <div id="respiratory-panel" class="container">
+        
+        <form id="respiratoryForm">
+            <label>Exposure Risks:</label>
+            <input type="checkbox" id="exposureRisk" value="3"> History of travel abroad or contact with confirmed case, exposure to camel products, or working in healthcare facility<br>
+  
+            <label>Clinical Signs and Symptoms:</label>
+            <input type="checkbox" id="fever" value="4"> Fever or recent history of fever<br>
+            <input type="checkbox" id="cough" value="4"> Cough (new or worsening)<br>
+            <input type="checkbox" id="shortnessOfBreath" value="4"> Shortness of breath (new or worsening)<br>
+            <input type="checkbox" id="headache" value="1"> Headache, sore throat, or rhinorrhea<br>
+            <input type="checkbox" id="nausea" value="1"> Nausea, vomiting, and/or diarrhea<br>
+            <input type="checkbox" id="chronic" value="1"> Chronic renal failure, CAD/heart failure, Immunocompromised patient<br>
+  
+            <label>Age Group:</label>
+            <select id="ageGroup">
+                <option value="pediatric">Pediatric (≤14 years)</option>
+                <option value="adult">Adult (>14 years)</option>
+            </select>
+  
+            <button type="button" onclick="calculateScore()">Calculate Score</button>
+        </form>
+  
+        <p id="result"></p>
+                    <div id="reception-desk" class="container">
+                        <h2 class="direct">Nursing Reception Desk C2/P3</h2>
+                        <form id="patient-form">
+                            <div class="form-group">
+                                <label for="serialNumber">Serial Number:</label>
+                                <input type="text" class="form-control" id="serialNumber" required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="complaint">Chief Complaint:</label>
+                                <input type="text" class="form-control" id="complaint" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="score">Visual Triage Score:</label>
+                                <input type="number" class="form-control" id="score" required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Arrival Method:</label><br>
+                                <button type="button" class="btn btn-outline-primary" onclick="setArrivalMethod('Self')">Self</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="setArrivalMethod('Red Crescent')">Red Crescent</button>
+                                <input type="hidden" id="arrivalMethod" value="Self" required>
+                                <div class="invalid-feedback" id="arrivalMethodFeedback">Please select an arrival method.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function setArrivalMethod(method) {
+            document.getElementById('arrivalMethod').value = method;
+            document.getElementById('arrivalMethodFeedback').style.display = 'none';
+        }
+    
+        function setCriticalAlert() {
+            alert('Critical Alert Activated!');
+        }
+    
+        function calculateScore() {
+            let totalScore = 0;
+    
+            if (document.getElementById('exposureRisk').checked) {
+                totalScore += parseInt(document.getElementById('exposureRisk').value);
+            }
+    
+            let ageGroup = document.getElementById('ageGroup').value;
+            let clinicalFactors = ['fever', 'cough', 'shortnessOfBreath', 'headache', 'nausea', 'chronic'];
+    
+            clinicalFactors.forEach(factor => {
+                let element = document.getElementById(factor);
+                if (element.checked) {
+                    if (ageGroup === 'pediatric') {
+                        if (factor === 'chronic') {
+                            totalScore += 0; // Pediatric chronic condition score is 0
+                        } else {
+                            totalScore += parseInt(element.value);
+                        }
+                    } else {
+                        totalScore += parseInt(element.value);
+                    }
+                }
+            });
+    
+            document.getElementById('result').innerText = "Total Score: " + totalScore;
+            document.getElementById('score').value = totalScore; // Reflect score in the main form
+    
+        
+        }
+    
+        let serialNumber;
+    
+    // Function to fetch the last serial number from the database
+    function fetchLastSerialNumber() {
+      db.collection("patients")
+        .orderBy("serialNumber", "desc")
+        .limit(1)
+        .get()
+        .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach((doc) => {
+              serialNumber = doc.data().serialNumber + 1;
+            });
+          } else {
+            serialNumber = 1; // Start from 1 if there are no records
+          }
+          document.getElementById('serialNumber').value = serialNumber;
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    }
+    
+    // Set initial values on load
+    window.onload = function() {
+      fetchLastSerialNumber();
+      setArrivalMethod('Self'); // Set default arrival method
+    }
+    
+    // Handle form submission to show the serial number
+    document.getElementById('patient-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+    
+      // Increment the serial number for next entry
+      let currentSerialNumber = serialNumber;
+      serialNumber++;
+    
+      // Fetch form values
+      var name = document.getElementById('name').value;
+      var complaint = document.getElementById('complaint').value;
+      var score = document.getElementById('score').value;
+      var arrivalMethod = document.getElementById('arrivalMethod').value;
+      var arrivalTime = moment().tz("Asia/Riyadh").format();
+    
+      // Add patient data to Firestore
+      db.collection("patients").add({
+        serialNumber: currentSerialNumber,
+        name: name,
+        chiefComplaint: complaint,
+        visualTriageScore: score,
+        arrivalMethod: arrivalMethod,
+        arrivalTime: arrivalTime,
+        status: 'waiting'
+      })
+      .then(function() {
+        console.log("Patient added successfully");
+        alert('Form submitted with Serial Number: ' + currentSerialNumber);
+        document.getElementById('patient-form').reset();
+        setArrivalMethod('Self'); // Reset arrival method to default
+        updateDashboard();
+      })
+      .catch(function(error) {
+        console.error("Error adding patient: ", error);
+      });
+                // Save Respiratory Illness Detection Panel data
+                saveRespiratoryData(currentSerialNumber, name, complaint);
+
+      // Update the serial number field for the next patient
+      document.getElementById('serialNumber').value = serialNumber;
+    });
+    </script>
+      <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyD4pCW2Js7b5MdwFfSJu1PF95yXiy90wj8",
+          authDomain: "hospital-management-8e646.firebaseapp.com",
+          projectId: "hospital-management-8e646",
+          storageBucket: "hospital-management-8e646.appspot.com",
+          messagingSenderId: "473973806686",
+          appId: "1:473973806686:web:d0ef14f0847616a1d9c6cf"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+    
+        // Reception Desk Logic
+        let selectedArrivalMethod = '';
+    
+    function setArrivalMethod(method) {
+      selectedArrivalMethod = method;
+      document.getElementById('arrivalMethod').value = method;
+      document.querySelectorAll('.btn-outline-primary, .btn-outline-secondary').forEach(button => {
+        button.classList.remove('active');
+      });
+      if (method === 'Self') {
+        document.querySelector('.btn-outline-primary').classList.add('active');
+      } else {
+        document.querySelector('.btn-outline-secondary').classList.add('active');
+      }
+      document.getElementById('arrivalMethodFeedback').style.display = 'none';
+    }
+    
+    
+    
+    function setCriticalAlert() {
+          document.getElementById('serialNumber').value = 'Unknown';
+          document.getElementById('name').value = 'Unknown';
+          document.getElementById('complaint').value = 'Unstable';
+          document.getElementById('score').value = '0';
+          setArrivalMethod('Red Crescent');
+          document.getElementById('patient-form').dispatchEvent(new Event('submit', { 'bubbles': true }));
+        }
+        function saveRespiratoryData(serialNumber, name, complaint) {
+            let exposureRisk = document.getElementById('exposureRisk').checked ? 3 : 0;
+            let fever = document.getElementById('fever').checked ? 4 : 0;
+            let cough = document.getElementById('cough').checked ? 4 : 0;
+            let shortnessOfBreath = document.getElementById('shortnessOfBreath').checked ? 4 : 0;
+            let headache = document.getElementById('headache').checked ? 1 : 0;
+            let nausea = document.getElementById('nausea').checked ? 1 : 0;
+            let chronic = document.getElementById('chronic').checked ? 1 : 0;
+
+            db.collection("VisualTriage").add({
+                serialNumber: serialNumber,
+                name: name,
+                chiefComplaint: complaint,
+                exposureRisk: exposureRisk,
+                fever: fever,
+                cough: cough,
+                shortnessOfBreath: shortnessOfBreath,
+                headache: headache,
+                nausea: nausea,
+                chronic: chronic,
+                timestamp: new Date().toISOString()
+            })
+            .then(function() {
+                console.log("Respiratory data saved successfully");
+            })
+            .catch(function(error) {
+                console.error("Error saving respiratory data: ", error);
+            });
+        }
+    
+    function updateDashboard() {
+      db.collection("patients").get().then((querySnapshot) => {
+        let totalVisits = 0;
+        let selfArrivals = 0;
+        let redCrescentArrivals = 0;
+        let waitingStatus = 0;
+        let registeredStatus = 0;
+    
+        querySnapshot.forEach((doc) => {
+          totalVisits++;
+          
+          const patient = doc.data();
+          if (patient.arrivalMethod === 'Self') {
+            selfArrivals++;
+          } else if (patient.arrivalMethod === 'Red Crescent') {
+            redCrescentArrivals++;
+          }
+          if (patient.status === 'waiting') {
+            waitingStatus++;
+          }
+          if (patient.registrationStatus === 'yes') {
+            registeredStatus++;
+          }
+        });
+    
+        document.getElementById('total-visits').textContent = totalVisits;
+        document.getElementById('self-arrivals').textContent = selfArrivals;
+        document.getElementById('red-crescent-arrivals').textContent = redCrescentArrivals;
+        document.getElementById('waiting-status').textContent = waitingStatus;
+        document.getElementById('registered').textContent = registeredStatus;
+      });
+    }
+    
+        updateDashboard();
+    
+    
+    
+              // Triage Nurse Panel Logic
+              db.collection("patients").where("status", "in", ["waiting", "nurse_assigned", "physician_assigned", "ctas_assigned"])
+        .onSnapshot(function(querySnapshot) {
+          var queue = document.getElementById('patient-queue').querySelector('.row');
+          queue.innerHTML = ''; // Clear previous content
+    
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach(function(doc) {
+              var patient = doc.data();
+              var nurseAssignedAt = patient.nurseAssignedAt ? moment(patient.nurseAssignedAt).tz("Asia/Riyadh").format('YYYY-MM-DD HH:mm:ss') : 'N/A';
+              var physicianAssignedAt = patient.physicianAssignedAt ? moment(patient.physicianAssignedAt).tz("Asia/Riyadh").format('YYYY-MM-DD HH:mm:ss') : 'N/A';
+    
+              var patientDiv = document.createElement('div');
+              patientDiv.className = 'col-md-4 col-sm-6 col-12';
+              if (patient.chiefComplaint === 'Unstable') {
+                  patientDiv.classList.add('unstable-bg');
+              } else if (patient.visualTriageScore >= 4) {
+                  patientDiv.classList.add('respiratory');
+              } else {
+                  patientDiv.classList.add('non-respiratory');
+              }
+              patientDiv.innerHTML = `
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <p><strong>${patient.serialNumber} | Arrival Method : ${patient.arrivalMethod}</strong></p>
+                    <p>Arrival Time: ${moment(patient.arrivalTime).tz("Asia/Riyadh").format('YYYY-MM-DD HH:mm:ss')}</p>
+                    <p>VT: ${patient.visualTriageScore}</p>
+                    <p>Patient Name: ${patient.name}<br>Chief Complaint: ${patient.chiefComplaint}</p>
+                    <label for="nurse-${doc.id}">Assign Nurse: </label>
+                    <input type="text" id="nurse-${doc.id}" required>
+                    <button class="btn btn-primary btn-sm" onclick="assignNurse('${doc.id}')">Assign Nurse</button> - ${patient.assignedNurse || ''} : ${nurseAssignedAt}<br>
+                    <label for="physician-${doc.id}">Assign Physician:</label>
+                    <input type="text" id="physician-${doc.id}" required>
+                    <button class="btn btn-primary btn-sm" onclick="assignPhysician('${doc.id}')">Assign Physician</button> - ${patient.assignedPhysician || ''} : ${physicianAssignedAt}<br>
+                    <label for="ctas-${doc.id}">CTAS Level:</label>
+                    <input type="number" id="ctas-${doc.id}" min="1" max="5" required>
+                    <button class="btn btn-primary btn-sm" onclick="assignCTAS('${doc.id}')">Assign CTAS Level</button> - ${patient.ctas}<br>
+                    <label for="registered-${doc.id}">Registered:</label>
+                    <select id="registered-${doc.id}">
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" onclick="assignRegistration('${doc.id}')">Update Registration</button><br>
+                    <div class="status-buttons">
+                      <button class="status-btn status-lama" onclick="updateStatus('${doc.id}', 'LAMA')">LAMA</button>
+                      <button class="status-btn status-dama" onclick="updateStatus('${doc.id}', 'DAMA')">DAMA</button>
+                      <button class="status-btn status-financial" onclick="updateStatus('${doc.id}', 'Not-Registered - Financial')">Not-Registered - Financial</button>
+                      <button class="status-btn status-insurance" onclick="updateStatus('${doc.id}', 'Not-Registered - Insurance Issue')">Not-Registered - Insurance Issue</button>
+                      <button class="status-btn status-others" onclick="updateStatus('${doc.id}', 'Not-Registered - Others')">Not-Registered - Others</button>
+                      <button class="status-btn status-documents" onclick="updateStatus('${doc.id}', 'Not-Registered - Insufficient Documents')">Not-Registered - Insufficient Documents</button>
+                      <button class="status-btn status-admitted" onclick="updateStatus('${doc.id}', 'Admitted')">Admitted</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+              queue.appendChild(patientDiv);
+            });
+          } else {
+            console.log("No patients in the waiting area still not registered");
+            queue.innerHTML = '<p>No patients in the waiting area still not registered</p>';
+          }
+        });
+
+        function assignNurse(patientId) {
+          var nurseId = document.getElementById(`nurse-${patientId}`).value;
+          var timestamp = new Date().toISOString();
+          db.collection("patients").doc(patientId).update({
+            assignedNurse: nurseId,
+            nurseAssignedAt: timestamp,
+            status: 'nurse_assigned'
+          })
+          .then(function() {
+            console.log("Nurse assigned successfully");
+          })
+          .catch(function(error) {
+            console.error("Error assigning nurse: ", error);
+          });
+        }
+
+        function assignPhysician(patientId) {
+          var physicianId = document.getElementById(`physician-${patientId}`).value;
+          var timestamp = new Date().toISOString();
+          db.collection("patients").doc(patientId).update({
+            assignedPhysician: physicianId,
+            physicianAssignedAt: timestamp,
+            status: 'physician_assigned'
+          })
+          .then(function() {
+            console.log("Physician assigned successfully");
+          })
+          .catch(function(error) {
+            console.error("Error assigning physician: ", error);
+          });
+        }
+
+        function assignCTAS(patientId) {
+          var ctasLevel = document.getElementById(`ctas-${patientId}`).value;
+          db.collection("patients").doc(patientId).update({
+            ctas: ctasLevel,
+            status: 'ctas_assigned'
+          })
+          .then(function() {
+            console.log("CTAS level assigned successfully");
+          })
+          .catch(function(error) {
+            console.error("Error assigning CTAS level: ", error);
+          });
+        }
+
+        function assignRegistration(patientId) {
+          var registeredStatus = document.getElementById(`registered-${patientId}`).value;
+          var newStatus = registeredStatus === 'yes' ? 'registered' : 'waiting';
+          db.collection("patients").doc(patientId).update({
+            registrationStatus: registeredStatus,
+            status: newStatus
+          })
+          .then(function() {
+            console.log("Registration status updated successfully");
+          })
+          .catch(function(error) {
+            console.error("Error updating registration status: ", error);
+          });
+        }
+
+        function updateStatus(patientId, status) {
+          db.collection("patients").doc(patientId).update({
+            status: status
+          })
+          .then(function() {
+            console.log("Status updated successfully");
+          })
+          .catch(function(error) {
+            console.error("Error updating status: ", error);
+          });
+        }
+    
+        // Function to determine the CSS class based on status
+        function getStatusClass(status) {
+          switch (status) {
+            case 'ctas_assigned':
+              return 'status-ctas_assigned';
+            case 'nurse_assigned':
+              return 'status-nurse_assigned';
+            case 'waiting':
+            default:
+              return 'status-waiting';
+          }
+        }
+    
+        // Floor Manager Dashboard Logic
+        db.collection("patients")
+      .onSnapshot(function(querySnapshot) {
+        var overallQueue = document.getElementById('overall-queue');
+        overallQueue.innerHTML = ''; // Clear previous content
+    
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach(function(doc) {
+            var patient = doc.data();
+    
+            var arrivalTime = moment(patient.arrivalTime).tz("Asia/Riyadh");
+            var nurseAssignedAt = patient.nurseAssignedAt ? moment(patient.nurseAssignedAt).tz("Asia/Riyadh") : null;
+            var physicianAssignedAt = patient.physicianAssignedAt ? moment(patient.physicianAssignedAt).tz("Asia/Riyadh") : null;
+    
+            var patientRow = document.createElement('tr');
+            patientRow.innerHTML = `
+              <td>${patient.serialNumber || 'N/A'}</td>
+    
+            <td>${patient.name}</td>
+              <td>${patient.chiefComplaint}</td>
+              <td>${patient.status}</td>
+              <td>${arrivalTime.format('YYYY-MM-DD HH:mm:ss')}</td>
+              <td>${patient.assignedNurse || 'N/A'}</td>
+              <td>${nurseAssignedAt ? nurseAssignedAt.format('YYYY-MM-DD HH:mm:ss') : 'N/A'}</td>
+              <td>${patient.assignedPhysician || 'N/A'}</td>
+              <td>${physicianAssignedAt ? physicianAssignedAt.format('YYYY-MM-DD HH:mm:ss') : 'N/A'}</td>
+              <td>${patient.ctas || 'N/A'}</td>
+              <td>${patient.visualTriageScore || 'N/A'}</td>
+            `;
+            overallQueue.appendChild(patientRow);
+          });
+        } else {
+          console.log("No patients in the database.");
+          overallQueue.innerHTML = '<tr><td colspan="11">No patients in the database.</td></tr>';
+        }
+      });
+    
+      </script>
+</body>
+
+</html>
